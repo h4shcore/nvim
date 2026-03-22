@@ -13,8 +13,8 @@ return {
           rust = "cargo r ",
         },
         input_word_completion = true,
-        baleia_setup = true,
-        bang_expansion = true,
+        -- baleia_setup = true,
+        -- bang_expansion = true,
         recompile_no_fail = true;
     }
   end
