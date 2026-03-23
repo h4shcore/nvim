@@ -5,7 +5,7 @@ return {
     lazy = false, -- force load at startup (debug mode)
     config = function()
       require("nvim-treesitter").setup({
-        ensure_installed = { 
+        ensure_installed = {
           "lua",
           "python",
           "javascript",
