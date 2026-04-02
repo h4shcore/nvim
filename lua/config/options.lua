@@ -33,3 +33,6 @@ opt.fillchars = { eob = " " }
 o.ignorecase = true
 o.smartcase = true
 o.mouse = "a"
+
+-- shell
+opt.shell = "zsh"
