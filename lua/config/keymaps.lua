@@ -27,3 +27,6 @@ map("v", "<leader>/", "gc", { desc = "toggle comment", remap = true })
 -- Compile mode
 map("n", "<leader>R", ":below Compile<CR>")
 map("n", "<leader>r", ":below Recompile<CR>")
+
+-- Oil mode
+map("n", "<leader>o", "<CMD>Oil --float <CR>", { desc = "Open parent directory" })
