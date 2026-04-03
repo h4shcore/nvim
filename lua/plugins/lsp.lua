@@ -19,7 +19,7 @@ return {
           "lua_ls",
           "rust_analyzer",
           "clangd"
-        }, -- auto install Rust & C/C++
+        },
       })
 
       -- =====================
@@ -38,7 +38,10 @@ return {
         settings = {
           ["rust-analyzer"] = {
             cargo = { allFeatures = true },
-            checkOnSave = { command = "clippy" },
+            checkOnSave = true,
+            check = {
+              command = "clippy"
+            },
           },
         },
       })
