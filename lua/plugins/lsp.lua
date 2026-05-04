@@ -8,57 +8,61 @@ return {
       "hrsh7th/cmp-nvim-lsp",
       "L3MON4D3/LuaSnip",
       "saadparwaiz1/cmp_luasnip",
+      "stevearc/conform.nvim",
     },
+
     config = function()
-      -- =====================
-      -- 1️⃣ Mason setup
-      -- =====================
+      -- Mason
       require("mason").setup()
+
+      -- LSP
       require("mason-lspconfig").setup({
-        ensure_installed = { 
+        ensure_installed = {
           "lua_ls",
           "rust_analyzer",
-          "clangd"
+          "clangd",
+          "nil_ls",
         },
       })
 
-      -- =====================
-      -- 2️⃣ LSP capabilities for cmp
-      -- =====================
+      -- Capabilities
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
 
-      local lspconfig = vim.lsp.config
-
-      -- =====================
-      -- 3️⃣ Rust LSP
-      -- =====================
-      lspconfig("rust_analyzer", {
+      -- Rust
+      vim.lsp.config("rust_analyzer", {
         capabilities = capabilities,
         settings = {
           ["rust-analyzer"] = {
             cargo = { allFeatures = true },
             checkOnSave = true,
-            check = {
-              command = "clippy"
-            },
+            check = { command = "clippy" },
           },
         },
       })
       vim.lsp.enable("rust_analyzer")
 
-      -- =====================
-      -- 4️⃣ C/C++ LSP
-      -- =====================
-      lspconfig("clangd", {
+      -- C/C++
+      vim.lsp.config("clangd", {
         capabilities = capabilities,
         cmd = { "clangd", "--background-index" },
       })
       vim.lsp.enable("clangd")
 
-      -- =====================
-      -- 5️⃣ Autocomplete (nvim-cmp)
-      -- =====================
+      -- Nix 
+      vim.lsp.config("nil_ls", {
+        capabilities = capabilities,
+        settings = {
+          ["nil"] = {
+            formatting = {
+              command = { "alejandra" },
+            },
+          },
+        },
+      })
+      vim.lsp.enable("nil_ls")
+
+      -- Completion
       local cmp = require("cmp")
       local luasnip = require("luasnip")
 
@@ -68,9 +72,11 @@ return {
             luasnip.lsp_expand(args.body)
           end,
         },
+
         mapping = cmp.mapping.preset.insert({
           ["<C-Space>"] = cmp.mapping.complete(),
           ["<CR>"] = cmp.mapping.confirm({ select = true }),
+
           ["<Tab>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
               cmp.select_next_item()
@@ -80,6 +86,7 @@ return {
               fallback()
             end
           end, { "i", "s" }),
+
           ["<S-Tab>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
               cmp.select_prev_item()
@@ -90,33 +97,40 @@ return {
             end
           end, { "i", "s" }),
         }),
-        sources = cmp.config.sources({
+
+        sources = {
           { name = "nvim_lsp" },
           { name = "luasnip" },
-        }),
+        },
       })
 
-      -- =====================
-      -- 6️⃣ Autoformat on save
-      -- =====================
+      -- Formatting
+      require("conform").setup({
+        formatters_by_ft = {
+          nix = { "alejandra" },
+          rust = { "rustfmt" },
+          c = { "clang-format" },
+          cpp = { "clang-format" },
+        },
+      })
+
       vim.api.nvim_create_autocmd("BufWritePre", {
-        pattern = {"*.rs","*.c","*.cpp"},
+        pattern = { "*.nix", "*.rs", "*.c", "*.cpp" },
         callback = function()
-          vim.lsp.buf.format()
-        end
+          require("conform").format({ lsp_fallback = true })
+        end,
       })
 
-      -- =====================
-      -- 7️⃣ LSP keymaps
-      -- =====================
+      -- Keymaps
       vim.api.nvim_create_autocmd("LspAttach", {
         callback = function(args)
           local buf = args.buf
           local map = vim.keymap.set
-          map("n", "gd", vim.lsp.buf.definition, { buffer = buf, desc = "Go to definition" })
-          map("n", "K", vim.lsp.buf.hover, { buffer = buf, desc = "Hover info" })
-          map("n", "<leader>rn", vim.lsp.buf.rename, { buffer = buf, desc = "Rename symbol" })
-          map("n", "<leader>ca", vim.lsp.buf.code_action, { buffer = buf, desc = "Code action" })
+
+          map("n", "gd", vim.lsp.buf.definition, { buffer = buf })
+          map("n", "gk", vim.lsp.buf.hover, { buffer = buf })
+          map("n", "<leader>rn", vim.lsp.buf.rename, { buffer = buf })
+          map("n", "<leader>ca", vim.lsp.buf.code_action, { buffer = buf })
         end,
       })
     end,
