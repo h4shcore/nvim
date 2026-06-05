@@ -26,12 +26,12 @@ return {
   --   end,
   -- },
 
-  {
-    "AvengeMedia/base46",
-    lazy = true,
-    opts = {},
-    config = function ()
-      vim.cmd.colorscheme("dms")
-    end,
-  },
+  -- {
+  --   "AvengeMedia/base46",
+  --   lazy = true,
+  --   opts = {},
+  --   config = function ()
+  --     vim.cmd.colorscheme("dms")
+  --   end,
+  -- },
 }
