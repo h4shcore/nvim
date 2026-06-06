@@ -28,5 +28,13 @@ map("v", "<leader>/", "gc", { desc = "toggle comment", remap = true })
 map("n", "<leader>R", ":below Compile<CR>")
 map("n", "<leader>r", ":below Recompile<CR>")
 
--- Oil mode
-map("n", "<leader>o", "<CMD>Oil --float <CR>", { desc = "Open parent directory" })
+map("n", ">", ">>", { noremap = true })
+map("n", "<", "<<", { noremap = true })
+
+-- Normal mode: move current line down (J) or up (K)
+map("n", "J", ":m .+1<CR>==", { noremap = true, silent = true })
+map("n", "K", ":m .-2<CR>==", { noremap = true, silent = true })
+
+-- Visual mode: move highlighted block down (J) or up (K)
+map("v", "J", ":m '>+1<CR>gv=gv", { noremap = true, silent = true })
+map("v", "K", ":m '<-2<CR>gv=gv", { noremap = true, silent = true })
