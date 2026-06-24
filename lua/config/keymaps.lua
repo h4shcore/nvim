@@ -30,6 +30,8 @@ map("n", "<leader>r", ":below Recompile<CR>")
 
 map("n", ">", ">>", { noremap = true })
 map("n", "<", "<<", { noremap = true })
+map("v", ">", ">gv", { noremap = true })
+map("v", "<", "<gv", { noremap = true })
 
 -- Normal mode: move current line down (J) or up (K)
 map("n", "J", ":m .+1<CR>==", { noremap = true, silent = true })
