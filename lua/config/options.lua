@@ -34,5 +34,5 @@ o.ignorecase = true
 o.smartcase = true
 o.mouse = "a"
 
--- shell
-opt.shell = "zsh"
+-- disables the bottom gap
+vim.opt.cmdheight = 0
