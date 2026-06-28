@@ -30,9 +30,10 @@ opt.shortmess:append "sI"
 
 -- misc
 opt.fillchars = { eob = " " }
+opt.title = true
 o.ignorecase = true
 o.smartcase = true
 o.mouse = "a"
 
 -- disables the bottom gap
-vim.opt.cmdheight = 0
+opt.cmdheight = 0
