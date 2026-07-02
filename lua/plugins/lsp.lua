@@ -12,17 +12,20 @@ return {
     },
 
     config = function()
-      -- Mason
-      require("mason").setup()
+      local function is_executable(bin)
+        return vim.fn.executable(bin) == 1
+      end
 
-      -- LSP
-      require("mason-lspconfig").setup({
-        ensure_installed = {
-          "lua_ls",
-          "rust_analyzer",
-          "clangd",
-        },
-      })
+      if not os.getenv("IN_NIX_SHELL") then
+        require("mason").setup()
+        require("mason-lspconfig").setup({
+          ensure_installed = {
+            "lua_ls",
+            "rust_analyzer",
+            "clangd",
+          },
+        })
+      end
 
       -- Capabilities
       local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -31,6 +34,8 @@ return {
       -- Rust
       vim.lsp.config("rust_analyzer", {
         capabilities = capabilities,
+        -- Force Neovim to use the system/flake binary if it exists
+        cmd = is_executable("rust-analyzer") and { "rust-analyzer" } or nil,
         settings = {
           ["rust-analyzer"] = {
             cargo = { allFeatures = true },
@@ -44,26 +49,28 @@ return {
       -- C/C++
       vim.lsp.config("clangd", {
         capabilities = capabilities,
-        cmd = { "clangd", "--background-index" },
+        cmd = is_executable("clangd") and { "clangd", "--background-index" } or { "clangd", "--background-index" },
       })
       vim.lsp.enable("clangd")
 
       -- Nix
-      vim.lsp.config("nil_ls", {
+      vim.lsp.config("nil", {
         capabilities = capabilities,
+        cmd = is_executable("nil") and { "nil" } or nil,
         settings = {
-          ["nil_ls"] = {
+          ["nil"] = {
             formatting = {
               command = { "alejandra" },
             },
           },
         },
       })
-      vim.lsp.enable("nil_ls")
+      vim.lsp.enable("nil")
 
       -- Haskell
       vim.lsp.config("hls", {
         capabilities = capabilities,
+        cmd = is_executable("haskell-language-server-wrapper") and { "haskell-language-server-wrapper", "--lsp" } or nil,
       })
       vim.lsp.enable("hls")
 

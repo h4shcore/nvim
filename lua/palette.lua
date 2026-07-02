@@ -1,1 +1,1 @@
-/nix/store/dg94x1cpy6xva486kc8wrizr6vly2h1j-home-manager-files/.config/nvim/lua/palette.lua
+/nix/store/dgdhm220adzvid5yh6igps1db8r5x8wj-home-manager-files/.config/nvim/lua/palette.lua
