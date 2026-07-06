@@ -1,59 +1,61 @@
--- return {
---   {
---     "ellisonleao/gruvbox.nvim",
---     priority = 1000,
---     config = function()
---       vim.cmd.colorscheme("gruvbox")
---
---       vim.schedule(function()
---         local groups = {
---           "SignColumn",
---           -- "LineNr",
---           -- "CursorLineNr",
---           "FoldColumn",
---
---           "DiagnosticSignWarn",
---           "DiagnosticSignError",
---           "DiagnosticSignInfo",
---           "DiagnosticSignHint",
---         }
---
---         for _, group in ipairs(groups) do
---           vim.api.nvim_set_hl(0, group, { bg = "none" })
---         end
---       end)
---     end,
---   },
--- }
-
 return {
-    "echasnovski/mini.base16",
-    version = false,
-    config = function()
-        local c = require("palette")
+  "echasnovski/mini.base16",
+  lazy = false,
+  priority = 1000,
 
-        require("mini.base16").setup({
-            palette = {
-                base00 = c.background,
-                base01 = c.black,
-                base02 = c.brightBlack,
-                base03 = c.brightGreen,
-                base04 = c.foreground,
-                base05 = c.foreground,
-                base06 = c.brightWhite,
-                base07 = c.white,
+  config = function()
+    local palette = require("wallust")
 
-                base08 = c.red,
-                base09 = c.accent,
-                base0A = c.yellow,
-                base0B = c.green,
-                base0C = c.cyan,
-                base0D = c.blue,
-                base0E = c.magenta,
-                base0F = c.brightRed,
-            },
-        })
+    require("mini.base16").setup({
+      palette = palette,
+    })
 
-        vim.g.colors_name = "ryu"
-    end,
+    -- Make sure our overrides happen after mini.base16
+    vim.schedule(function()
+      local hl = vim.api.nvim_set_hl
+
+      -- Main background
+      hl(0, "Normal", { fg = palette.base05, bg = palette.base00 })
+      hl(0, "NormalNC", { fg = palette.base05, bg = palette.base00 })
+
+      -- Gutter
+      hl(0, "CursorLineSign", { bg = "NONE" })
+      hl(0, "CursorLineFold", { bg = "NONE" })
+      hl(0, "LineNrAbove", { fg = palette.base03, bg = "NONE" })
+      hl(0, "LineNrBelow", { fg = palette.base03, bg = "NONE" })
+
+      -- End of buffer
+      hl(0, "EndOfBuffer", { fg = palette.base00 })
+
+      -- Floating windows
+      hl(0, "NormalFloat", { bg = palette.base00 })
+      hl(0, "FloatBorder", { fg = palette.base03, bg = palette.base00 })
+
+      -- GitSign column
+      hl(0, "CursorLineSign", { bg = "NONE" })
+      hl(0, "SignColumn", { bg = "NONE" })
+
+      hl(0, "GitSignsAdd", {
+        fg = palette.base0B,
+        bg = "NONE",
+      })
+
+      hl(0, "GitSignsChange", {
+        fg = palette.base0C,
+        bg = "NONE",
+      })
+
+      hl(0, "GitSignsDelete", {
+        fg = palette.base08,
+        bg = "NONE",
+      })
+
+      hl(0, "GitSignsUntracked", {
+        fg = palette.base0A,
+        bg = "NONE",
+      })
+    end)
+
+    vim.g.colors_name = "wallust"
+  end,
 }
